@@ -1,6 +1,8 @@
 package edu.wisc.cs.sdn.simpledns;
 
 import java.io.*;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,14 +13,13 @@ public class SimpleDNS
 	private static Map<String, String> argMap = new HashMap<>();
 	private static String ERROR_WRONG_ARG = "Error: missing or additional arguments";
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) throws SocketException, UnknownHostException {
 		ArgumentHandler argumentHandler = new ArgumentHandler(args);
 		Map<String, String> optionsMap = argumentHandler.getOptionsMap();
 		String serverIp = optionsMap.get("r");
 		List<Amazon> amazonIpDetails = readCSV(optionsMap.get("e"));
 
-		
+
 		for (Amazon amazon : amazonIpDetails) {
 			System.out.println("IP Address :: " + amazon.getIp() + " Mask :: " + amazon.getMask() + " Region :: " + amazon.getRegion());
 		}
@@ -26,14 +27,13 @@ public class SimpleDNS
 		System.out.println("File Path is :: " + optionsMap.get("e"));
 		System.out.println("Hello, DNS!");
 
-
-		new SimpleDNSHandler(serverIp, amazonIpDetails). start();
+		new SimpleDNSHandler(serverIp, amazonIpDetails).start();
 	}
 
 	private static List<Amazon> readCSV(String csvFile) {
 		List<Amazon> amazonList = new ArrayList<>();
 		BufferedReader br = null;
-		String line = "";
+		String line;
 		String cvsSplitBy = ",";
 		try {
 			br = new BufferedReader(new FileReader(csvFile));
@@ -70,7 +70,7 @@ public class SimpleDNS
 
 	public static String fromIPv4Address(int ipAddress) {
 		StringBuilder sb = new StringBuilder();
-		int result = 0;
+		int result;
 		for (int i = 0; i < 4; ++i) {
 			result = (ipAddress >> ((3-i)*8)) & 0xff;
 			sb.append(Integer.valueOf(result).toString());
@@ -97,6 +97,19 @@ public class SimpleDNS
 		}
 		catch (Exception e) {
 			throw new RuntimeException("Integer expected in IP Address!");
+		}
+		return result;
+	}
+
+	public static byte[] toIPv4AddressBytes(String ipAddress) {
+		String[] octets = ipAddress.split("\\.");
+		if (octets.length != 4)
+			throw new IllegalArgumentException("Specified IPv4 address must" +
+					"contain 4 sets of numerical digits separated by periods");
+
+		byte[] result = new byte[4];
+		for (int i = 0; i < 4; ++i) {
+			result[i] = Integer.valueOf(octets[i]).byteValue();
 		}
 		return result;
 	}
