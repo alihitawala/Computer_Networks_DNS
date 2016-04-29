@@ -39,6 +39,7 @@ public class SimpleDNSHandler {
             InetAddress clientAddress = null;
             int clientPort = -1;
             short clientTransactionId = -1;
+            boolean recursionDesired = false;
             List<DNSQuestion> questions = null;
             List<DNSResourceRecord> additional = new ArrayList<>();
             List<DNSResourceRecord> authorities = new ArrayList<>();
@@ -50,6 +51,7 @@ public class SimpleDNSHandler {
                 if (!isPacketValid(dnsPacket))
                     continue;
                 if (dnsPacket.isQuery()) {
+                    recursionDesired = dnsPacket.isRecursionDesired();
                     clientAddress = receivePacket.getAddress();
                     clientPort = receivePacket.getPort();
                     clientTransactionId = dnsPacket.getId();
@@ -60,7 +62,17 @@ public class SimpleDNSHandler {
                     handlePacketQuery(dnsPacket);
                 }
                 else {
-                    if (!dnsPacket.getAnswers().isEmpty()) {
+                    if (!recursionDesired) {
+                        additional.clear();
+                        authorities.clear();
+                        additional.addAll(dnsPacket.getAdditional());
+                        authorities.addAll(dnsPacket.getAuthorities());
+                        List<DNSResourceRecord> answers = dnsPacket.getAnswers();
+                        populateAnswers(answers, states);
+                        dnsPacket.setQuestions(questions);
+                        sendResponse(dnsPacket, clientAddress, clientPort, clientTransactionId, additional, authorities);
+                    }
+                    else if (!dnsPacket.getAnswers().isEmpty()) {
                         if (isRecordAvailable(dnsPacket)) {
                             List<DNSResourceRecord> answers = dnsPacket.getAnswers();
                             populateAnswers(answers, states);
