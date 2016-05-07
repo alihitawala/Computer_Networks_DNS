@@ -71,6 +71,9 @@ public class DNSResourceRecord
 			case DNS.TYPE_AAAA:
 				record.data = DNSRdataAddress.deserialize(bb, rdataLength);
 				break;
+			case DNS.TYPE_TXT:
+				record.data = DNSRdataString.deserialize(bb, rdataLength);
+				break;
 			case DNS.TYPE_NS:
 			case DNS.TYPE_CNAME:
 				record.data = DNSRdataName.deserialize(bb);
@@ -126,6 +129,9 @@ public class DNSResourceRecord
 			break;
 		case DNS.TYPE_EC2:
 			strType = "EC2";
+			break;
+		case DNS.TYPE_TXT:
+			strType = "TXT";
 			break;
 		default:
 			strType = String.format("Unknown (%d)", this.type);

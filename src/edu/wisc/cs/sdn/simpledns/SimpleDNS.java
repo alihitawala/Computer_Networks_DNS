@@ -114,6 +114,14 @@ public class SimpleDNS
 		return result;
 	}
 
+	public static int toIPv4Address(byte[] ipAddress) {
+		int ip = 0;
+		for (int i = 0; i < 4; i++) {
+			int t = (ipAddress[i] & 0xff) << ((3-i)*8);
+			ip |= t;
+		}
+		return ip;
+	}
 	static class ArgumentHandler {
 		private Map<String, String> optionsMap = new HashMap<>();
 		List<String> optionList = new ArrayList<>();
