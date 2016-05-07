@@ -31,6 +31,7 @@ public class SimpleDNSHandler {
         this.amazonIpDetails = amazonIpDetails;
         InetAddress aHost = InetAddress.getByName("localhost");
         this.serverSocket = new DatagramSocket(UDP_CLIENT_PORT, InetAddress.getByName("0.0.0.0"));
+        this.serverSocket.setSoTimeout(5000);
     }
 
     public void start() {
@@ -39,12 +40,19 @@ public class SimpleDNSHandler {
             DatagramPacket receivePacket = new DatagramPacket(data, data.length);
 
             while (true) {
-                this.serverSocket.receive(receivePacket);
-                byte[] receivedData = receivePacket.getData();
-                this.states.clear();
-                DNS dnsPacket = DNS.deserialize(receivedData, receivedData.length);
-                DNS receivedAnswer = handleMain(dnsPacket);
-                sendResponse(receivedAnswer, receivePacket.getAddress(), receivePacket.getPort(), dnsPacket.getId());
+                try {
+                    this.serverSocket.setSoTimeout(5000);
+                    this.serverSocket.receive(receivePacket);
+                    this.serverSocket.setSoTimeout(0);
+                    byte[] receivedData = receivePacket.getData();
+                    this.states.clear();
+                    DNS dnsPacket = DNS.deserialize(receivedData, receivedData.length);
+                    DNS receivedAnswer = handleMain(dnsPacket);
+                    sendResponse(receivedAnswer, receivePacket.getAddress(), receivePacket.getPort(), dnsPacket.getId());
+                }
+                catch (SocketTimeoutException e) {
+                    System.out.println("Socket Timeout Exception!!");
+                }
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -59,6 +67,7 @@ public class SimpleDNSHandler {
         boolean recursionDesired;
         List<DNSQuestion> questions;
         DatagramSocket socket = new DatagramSocket();
+        socket.setSoTimeout(5000);
         recursionDesired = dnsPacket.isRecursionDesired();
         questions = dnsPacket.getQuestions();
         byte[] data = new byte[UDP_BUFFER_SIZE];
@@ -66,7 +75,9 @@ public class SimpleDNSHandler {
         handlePacketQuery(socket, dnsPacket);
         DNS resultDNSPacket = null;
         while (true) {
+            socket.setSoTimeout(5000);
             socket.receive(receivePacket);
+            socket.setSoTimeout(0);
             byte[] receivedData = receivePacket.getData();
             DNS receivedDns = DNS.deserialize(receivedData, receivedData.length);
             if (!recursionDesired) {

@@ -1,0 +1,80 @@
+1a. Number of DNS lookups = 12, Redundant = 0
+
+1b. DNS Queries fired by local DNS for www.code.org
+Name Server Queried         |   Records Returned
+a.root-servers.net          |   org.			172800	IN	NS	d0.org.afilias-nst.org.
+                            |   d0.org.afilias-nst.org.	172800	IN	A	199.19.57.1
+d0.org.afilias-nst.org      |   code.org.		86400	IN	NS	ns-1497.awsdns-59.org.
+                            |   ns-1497.awsdns-59.org.	86400	IN	A	205.251.197.217
+ns-1497.awsdns-59.org       |   www.code.org.		60	IN	A	174.129.210.35
+
+1c. For this it can to go to NS for 'code.org' which is 'ns-1497.awsdns-59.org' and can query for 'code.org' A type record
+Name Server Queried         |   Records Returned
+ns-1497.awsdns-59.org       |   code.org.		60	IN	A	52.84.8.105
+
+
+2a.     www.code.org        "Virginia-107.20.189.132"
+
+2b. Akamai : cdn.optimizely.com
+    EdgeCast : None
+2c.
+    DETAILS
+    1. code.org
+        53431 - /,
+        53432 - /*, /style.css*, user-hero.css*, angular-sanitize.min.js*, video.min.js*, playlab_gallery_thumbnails.png*
+                kids10.jpg*, user_menu, client-location, logo_tall_teacher2.jpg*, favicon.ico*
+        53433 - /user-menu.css*, details-polyfill.css*, angular-route.min.js*, video-js.css*, jquery.placeholder.js*,
+                girl16.jpg*
+        53438 - jquery.min.js*, button.css*, ng-csv.js*, fastclick.js*, flag_sphere.png*, girl19.jpg*, logo_tall_mc.jpg*
+        53439 - jquery.details.min.js*, br-strap.css*, homepage.css*, angular-resource.min.js*, videojs-ie8.min.js, logo.png*,
+                play-button.png*, artist_gallery_thumbnail.png*, boy7.jpg*, user_hero, sheryl.jpg*, logo_tall_map.jpg*
+        53440 - details-polyfill.js*, common.css*, 16x9.png*, boy5.jpg*
+        53441 - angular.min.js*, bootstrap.min.js*, download.png*, girl12.jpg*, fontawesome-webfont.woff*,
+                logo_tall_elementary.jpg*
+
+    2. cdn.optimizely.com
+        53490 - 400912536.js
+
+    3. www.fullstory.com
+        53522 - fs.js, POST,
+
+    4. google-analytics.com
+        53536 - analytics.js, linkid.js, collect,
+
+    5. www.youtube.com
+        53559 - favicon.ico, embed__
+
+    6. js-agent.newrelic.com
+        53560 - nr-918.min.js*
+
+    7. s.ytimg.com
+        53571 - something, base.js, embed-player.js
+
+    8. www.google.com
+        53405 - arbit
+
+    9. static.doubleclick.net
+        53583 - ad_status.js
+
+    10. i.ytimg.com
+        53589 - hqdefault.jpg
+
+    11. fonts.gstatic.com
+        53594 - arbit
+
+    How many HTTP requests were issued to each CDN and over how many connections?
+    1. code.org - 7 connections, total requests - 47
+    2. cdn.optimizely.com - 1 connection, total requests - 1
+    3. www.fullstory.com -  1 connection, total requests - 2
+    4. google-analytics.com -  1 connection, total requests - 3
+    5. www.youtube.com -  1 connection, total requests - 2
+    6. js-agent.newrelic.com -  1 connection, total requests - 1
+    7. s.ytimg.com -  1 connection, total requests - 3
+    8. www.google.com - 1 connection, total requests - 1
+    9. static.doubleclick.net - 1 connection, total requests - 1
+    10. i.ytimg.com - 1 connection, total requests - 1
+    11. fonts.gstatic.com - 1 connection, total requests - 1
+
+2d. How many of the requested web objects were already stored in the CDN’s cache?
+    1. code.org - 42 cache hit
+    2. js-agent.newrelic.com -  1 cache hit
