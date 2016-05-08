@@ -1,3 +1,6 @@
+***Our assumption for this part of assignment -  CDN mentioned in the Webpagetest.net are all CDN links - under tab
+'Effective use of CDN' (not only those which has X-Cache:Hit in Response object)***
+
 1a. Number of DNS lookups = 12, Redundant = 0
 
 1b. DNS Queries fired by local DNS for www.code.org
