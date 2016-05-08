@@ -51,7 +51,8 @@ public class SimpleDNSHandler {
                     sendResponse(receivedAnswer, receivePacket.getAddress(), receivePacket.getPort(), dnsPacket.getId());
                 }
                 catch (SocketTimeoutException e) {
-                    System.out.println("Socket Timeout Exception!!");
+                    //do nothing
+//                    System.out.println("Socket Timeout Exception!!");
                 }
             }
         } catch (IOException e) {
@@ -120,7 +121,7 @@ public class SimpleDNSHandler {
                     if (found)
                         break;
                 }
-                System.out.println("Gotcha!!");
+//                System.out.println("Gotcha!!");
             }
             else {
                 handlePacketResponse(socket, receivedDns);

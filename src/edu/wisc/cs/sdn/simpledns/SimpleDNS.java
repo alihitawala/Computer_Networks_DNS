@@ -25,7 +25,6 @@ public class SimpleDNS
 		}
 		System.out.println("IP address is :: " + optionsMap.get("r"));
 		System.out.println("File Path is :: " + optionsMap.get("e"));
-		System.out.println("Hello, DNS!");
 
 		new SimpleDNSHandler(serverIp, amazonIpDetails).start();
 	}
